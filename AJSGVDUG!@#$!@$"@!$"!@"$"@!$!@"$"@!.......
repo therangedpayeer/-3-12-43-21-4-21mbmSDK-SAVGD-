@@ -15,7 +15,6 @@ local LOADER_TIME = 2
 local WHITELIST = {
     3845782, 
     3767122345,
-    5624551389,
     player.UserId
 }
 
